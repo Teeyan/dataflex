@@ -1,0 +1,120 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    background-image: url(https://imgur.com/R3pwxiZ.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #464646;
+}
+
+body {
+   
+}
+
+iframe {
+    display:block;
+    width:100%;
+}
+
+img {
+    display:block;
+    max-width: 100%;
+    height: auto;
+}
+
+.container {
+    width: 100px;
+    height: 100px;
+    
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.init {
+    border-radius: 25px;
+    width:auto;
+    height:auto;
+    padding-top:50px;
+    padding-bottom:50px;
+    background-color:beige;
+}
+
+input[name="upload"] {
+    align-content:center;
+    margin-left:40%;
+}
+body {
+  font-family: Arial;
+  color: white;
+}
+
+.split {
+  height: 100%;
+  width: 75%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  padding-top: 20px;
+}
+
+.left {
+  left: 0;
+  background-color: #a6bddb;  
+}
+
+.right {
+  right: 0;
+  background-color: #2b8cbe; 
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.centered img {
+  width: 150px;
+  border-radius: 50%;
+}
+.search {
+    width: 50%;
+    position: relative;
+    left: 10%;
+    top: 10%;
+}
+#mySearch {
+  width: 100%;
+  font-size: 18px;
+  padding: 11px;
+  border: 1px solid #ddd;
+}
+
+/* Style the navigation menu */
+#myMenu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Style the navigation links */
+#myMenu li a {
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myMenu li a:hover {
+  background-color: #eee;
+}
