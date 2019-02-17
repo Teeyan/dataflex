@@ -109,10 +109,11 @@ render() {
       <div id="uploadData" top="100%">
                <center>
                    <form>
-                       <input name="fileUpload" type= "file" onChange={this.handleFileChange}/> 
-                       <input name="headerUpload" type="file" onChange={this.handleHeaderChange}/>
+                       <input id="fup" name="fileUpload" type= "file" onChange={this.handleFileChange}/> 
+
+                       <input id="hud" name="headerUpload" type="file" onChange={this.handleHeaderChange}/>
                    </form>
-                  <button type="submit" className="btn btn-primary" id="upload" onClick={this.handleUpload}>
+                  <button type="submit" className="btn btn-primary" id="uploadbutton" onClick={this.handleUpload}>
                     Upload!
                   </button>
                </center>
@@ -511,10 +512,10 @@ removeItem() {
 
     render() {
         return (
-            <div>
+            <div className='FeatureSelection' id='features'>
               <input type="checkbox" onChange={this.checkItem}/>Add<br/>
                 {this.props.value}
-            <button className="btn" onClick={this.removeItem}><i className="fa fa-trash"></i></button>
+            <li id="trash_li"class="w3-xlarge"><i className="fa fa-trash" id="trash" onClick={this.removeItem}></i></li>
         </div>
         );
     }
