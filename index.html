@@ -4,7 +4,7 @@
         <title>Flex!</title>
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     
     <body>
@@ -203,7 +203,30 @@
 
             render() {
               return(
-
+                <h2>{this.props.value}</h2>
+                  <div id="table_values">
+                      <table>
+                        <tr>
+                            <th>Mean</th>
+                            <th>Mode</th>
+                            <th>Median</th>
+                            <th>Variance</th>
+                            <th>Null Number</th>
+                        </tr>
+                        <tr>
+                            <td>{this.State.mean}</td>
+                            <td>{this.State.mode}</td>
+                            <td>{this.State.median00}</td>
+                            <td>{this.State.Variance}</td>
+                            <td>{this.State.num_null}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="optional_features">
+                  <button type="submit" class="btn btn-primary" id="view">View</button>
+                  <button type="submit" class="btn btn-primary" id="view">Normalize</button>
+                  <button type="submit" class="btn btn-primary" id="view">Fill</button>
+                </div>
               );
             }
           }
@@ -329,7 +352,11 @@
             }
 
             render() {
-
+                return (<div>
+                    <input type="checkbox" onchange="checkItem()">Add<br>
+                        {this.props.value}
+                        <button class="btn" onclick="removeItem()"><i class="fa fa-trash"></i></button>
+                </div>
             }
           }
         </script>
