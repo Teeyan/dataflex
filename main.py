@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 #from flask_cors import CORS 		# if we need cross-domain
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder="static/dist", template_folder="static")
 #CORS(app)
 
 @app.route("/")
@@ -15,4 +15,4 @@ def scoob():
 	pass
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0',port=2000)
+	app.run(host='0.0.0.0',port=3000)
