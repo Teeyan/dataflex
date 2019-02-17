@@ -39,7 +39,7 @@
               </div>
             </div>
         
-            <div class="split right">
+            k<div class="split right">
               <div class="centered">
                   <div id = "featureData">
                     <!---REact Code---->  
@@ -91,8 +91,248 @@
           }
         }
         </script>
+
+
+        <!-- React Components -->
+        <script>
+          import React, { Component } from 'react';
+          import {
+            PopupboxManager,
+            PopupboxContainer
+          } from 'react-popupbox';
+          import './App.css';
+
+          /**
+          * Attribute Entry Component:
+          *   Exist in list on the right side of the screen
+          */
+          class Entry extends React.Component {
+            constructor(props) {
+              super(props);
+              this.state = {
+                mean: 0,
+                mode: 0,
+                median: 0,
+                variance: 0,
+                num_null: 0
+              }
+
+              this.handleNormalize = this.handleNormalize.bind(this)
+              this.handleNull = this.handleNull.bind(this)
+              this.viewData = this.viewData.bind(this)
+            }
+
+            componentDidMount() {
+              fetch('localhost:8000/meta?attr=' + this.props.value)
+              .then(results => {
+                return results.json()
+              }).then(data => {
+                this.setState({
+                  mean: data.mean,
+                  mode: data.mode,
+                  median: data.median,
+                  variance: data.variance,
+                  num_null: data.num_null
+                })
+              })
+            }
+
+            /**
+            * Normalize this entry
+            */
+            handleNormalize() {
+              // Normalize
+              fetch('localhost:8000/normalize?attr=' + this.props.value)
+
+              // Fetch the new metadata
+              fetch('localhost:8000/meta?attr=' + this.props.value)
+              .then(results => {
+                return results.json()
+              }).then(data => {
+                this.setState({
+                  mean: data.mean,
+                  mode: data.mode,
+                  median: data.median,
+                  variance: data.variance,
+                  num_null: data.num_null
+                })
+              })
+            }
+
+            /**
+            * Fill in Null for this entry
+            */
+            handleNull {
+              // Fill in Null based on value
+              fetch('localhost:8000/fill?attr=' + this.props.value + '&method=mean')
+
+              // Fetch the new metadata
+              fetch('localhost:8000/meta?attr=' + this.props.value)
+              .then(results => {
+                return results.json()
+              }).then(data => {
+                this.setState({
+                  mean: data.mean,
+                  mode: data.mode,
+                  median: data.median,
+                  variance: data.variance,
+                  num_null: data.num_null
+                })
+              })
+            }
+
+            /**
+            * View the data points for this entry
+            */ 
+            viewData {
+              // put in a popup or some shit idk
+              fetch('localhost:8000/view?attr=' + this.props.value)
+              .then(results => {
+                return results.json()
+              }).then(data => {
+                const values = data[this.props.value]
+                const content = {
+                  <div>
+                    {values}
+                  </div>
+                }
+                PopupboxManager.open({content})
+              })
+            }
+
+
+            render() {
+              return(
+
+              );
+            }
+          }
+
+           /**
+           * AttrList Component:
+           *  Main right side of the screen, stores the primary state for the Entry components
+           */
+          class AttrList extends React.Component {
+            constructor(props) {
+              super(props);
+              this.state = {
+                entries = new Set()
+              };
+
+              this.additem = this.addItem.bind(this);
+              this.removeItem = this.removeItem.bind(this);
+            }
+
+            // Add an Entry to the list
+            addItem(attr) {
+              this.setState(({entries}) => ({
+                entries: new Set(entries).add(attr)
+              }));
+            }
+
+            // Remove entry from the list
+            removeItem(attr) {
+              this.setState(({entries}) => {
+                const newEntries = new Set(entries);
+                newEntries.delete(attr);
+
+                return {
+                  entries: newEntries
+                };
+              });
+            }
+
+            // Render the Attribute Entries individually as controlled components
+            render() {
+              const attrList = Array.from(this.state.entries).map((attr) =>
+                <Entry key={attr} value={attr}>
+              );
+              
+              return (
+                <ul>
+                  {attrList}
+                </ul>
+              )
+            }
+          }
+
+          /**
+          * SearchList left side of the screen containing search entry
+          */
+          class SearchList extends React.Component {
+            constructor(props) {
+              super(props);
+              this.state = {
+                attrList: []
+              };
+              this.handler = this.handler.bind(this);
+            }
+
+            componentDidMount() {
+              fetch("localhost:8000/init?upload=" + this.props.upload + "&header=" + this.props.header)
+              .then(results => {
+                return results.json();
+              }).then(data => {
+                this.setState({attrList: data})
+              });
+            }
+
+            handler(attr) {
+              this.setState(({attrList}) => {
+                const newList = new Set(attrList);
+                newList.delete(attr);
+                return {attrList.Array.from(newList)}
+              });
+            }
+
+            render() {
+              const attributeList = ths.state.attrList.map((attr) =>
+                <SearchEntry key={attr} value={attr} handler={this.handler}>
+              );
+              return (
+                <ul>
+                  {attributeList}
+                </ul>
+              );
+            }
+          }
+
+          /**
+          * SearchEntry left side of the screen
+          */
+          class SearchEntry extends React.Component {
+            constructor(props) {
+              super(props);
+              this.state = {
+                isChecked: false;
+              }
+              this.removeItem = this.removeItem.bind(this);
+              this.checkItem = this.checkItem.bind(this);
+            }
+
+            checkItem() {
+              if(this.state.isChecked) {
+                AttrList.removeItem(this.props.value);
+                this.setState({isChecked: false});
+              }
+              else {
+                this.setState({isChecked: true});
+                AttrList.addItem(this.props.value);
+              }
+            }
+
+            removeItem() {
+              if(this.state.isChecked) {
+                AttrList.removeItem(this.props.value);
+              }
+              this.props.handler(this.props.value);
+            }
+
+            render() {
+
+            }
+          }
+        </script>
         
-
-
     </body>
 </html>  
