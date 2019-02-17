@@ -5,18 +5,22 @@ import json
 
 class DataManagement:
     
-    def __init__(self, filename, header_file=None, delimiter=","):# DONE
-        """
-        Initialize the DM class by parsing the file and storing it in a 
-        pandas dataframe. Must return a json object of all attribute names
-        """
+    def __init__(self, data):
+        self.data = data
+        
+    @classmethod
+    def from_pkl(cls, data):
+        return cls(data)
+
+    @classmethod
+    def from_file(cls, filename, header_file=None, delimiter=","):
         if header_file is None:
-            self.data = pd.read_csv(filename, sep=delimiter)
+            return cls(pd.read_csv(filename, sep=delimiter))
         else:
             with open(header_file, "r") as headers:
                 columns = headers.read().strip().split(",")
-                self.data = pd.read_csv(filename, sep=delimiter, names=columns)
-        
+                return cls(pd.read_csv(filename, sep=delimiter, names=columns))
+
         
     def get_labels(self): # DONE
         return json.dumps(list(self.data.columns.values))
