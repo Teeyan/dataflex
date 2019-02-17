@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Flex!</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    </head>
+    
+    <body>
+     <div id="uploadData" top= 100%>
+         <center>
+             <form>
+                 <input name="fileUpload" type= "file"> 
+             </form>
+         
+            <button type="submit" class="btn btn-primary" id="upload">Upload!</button>
+         </center>
+    </div>     
+    <div id="data">                
+            <div class="split left">
+              <div class="search">
+                  <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+                 <div id="attributes">
+                    <ul id="myMenu">
+                          <li><a href="#">HTML</a></li>
+                          <li><a href="#">CSS</a></li>
+                          <li><a href="#">JavaScript</a></li>
+                          <li><a href="#">PHP</a></li>
+                          <li><a href="#">Python</a></li>
+                          <li><a href="#">jQuery</a></li>
+                          <li><a href="#">SQL</a></li>
+                          <li><a href="#">Bootstrap</a></li>
+                          <li><a href="#">Node.js</a></li>
+                        <!---- temp dont use REact Code Here-->
+                        </ul>
+                  </div>
+              </div>
+            </div>
+        
+            <div class="split right">
+              <div class="centered">
+                  <div id = "featureData">
+                    <!---REact Code---->  
+                      
+                  <div class="newBTN">
+                  <button type="submit" class="btn btn-primary" id="newupload">New Search</button>
+                </div>
+              </div>
+            </div>
+
+
+        </div>
+        </div>
+                <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function(){
+            $("#uploadData").show();
+            $("#data").hide(); 
+        })
+        $("#upload").on("click",function(){
+            $("#uploadData").hide();
+            $("#data").show();
+        })
+        $("#newupload").on("click",function(){
+            $("#uploadData").show();
+            $("#data").hide();
+        })
+        var input, filter, ul, li, a, i;
+          input = document.getElementById("mySearch");
+          filter = input.value.toUpperCase();
+          ul = document.getElementById("myMenu");
+          li = ul.getElementsByTagName("li");
+        function myFunction() {
+          var input, filter, ul, li, a, i;
+          input = document.getElementById("mySearch");
+          filter = input.value.toUpperCase();
+          ul = document.getElementById("myMenu");
+          li = ul.getElementsByTagName("li");
+          for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+              li[i].style.display = "";
+            } else {
+              li[i].style.display = "none";
+            }
+          }
+        }
+        </script>
+        
+
+
+    </body>
+</html>  
