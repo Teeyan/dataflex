@@ -1,0 +1,88 @@
+
+html{
+	background-image: url("panda.jpg");
+	background-size: auto;
+	background-position: center;
+}
+#uploadData {
+	position: absolute;
+	top: 50%;
+	left: 30%;
+}
+#uploadbutton{
+	position: absolute;
+	margin-top: 50px;
+	right:54.5%;
+
+}
+
+#summary_buttons{
+	position: fixed;
+	bottom: 5px;
+	left:40%;
+}
+#view{
+	margin: 10px;
+}
+#normalize{
+	margin: 10px;
+}
+#fill{
+	margin: 10px;
+}
+#trash_li{
+	list-style-type: none;
+	align-content: right;
+}
+html{
+	background-color: lightblue;
+
+}
+#save_btn{
+	margin: 10px;
+}
+#correlate_tn{
+	margin: 10px;
+}
+#view_all_btn{
+	margin: 10px;
+}
+.FeatureSelection{
+	text-align: center;
+	border-style: solid;
+	border-color: blue;
+	background-color: lightblue;
+	margin: 10px;
+}
+.left{
+	float: left;
+	width: 20%;
+}
+#table_values{
+	float:left;
+	width:80%;
+}
+
+
+
+table {
+	table-layout: fixed;
+	border-collapse: collapse;
+	border: solid black;
+	background-color: azure; 
+	float:left;
+}
+th{
+	letter-spacing: 2px;
+}
+td{
+	letter-spacing:1px;
+}
+tbody td{
+	text-align: center;
+}
+tfoot th{
+	letter-spacing: 2px;
+}
+
+#optional_features
