@@ -15,11 +15,11 @@ class DataManagement:
     @classmethod
     def from_file(cls, filename, header_file=None, delimiter=","):
         if header_file is None:
-            return cls(pd.read_csv(filename, sep=delimiter))
+            return cls(pd.read_csv(filename, sep=delimiter).drop('class', axis=1))
         else:
             with open(header_file, "r") as headers:
                 columns = headers.read().strip().split(",")
-                return cls(pd.read_csv(filename, sep=delimiter, names=columns))
+                return cls(pd.read_csv(filename, sep=delimiter, names=columns).drop('class', axis=1))
 
         
     def get_labels(self): # DONE
@@ -101,16 +101,16 @@ class DataManagement:
     Helper Methods for getting meta info
     """
     def get_mean(self, attr_name):
-        return self.data[attr_name].mean()
+        return round(self.data[attr_name].mean(), 3)
     
     def get_mode(self, attr_name):
-        return self.data[attr_name].mode().values[0]
+        return round(self.data[attr_name].mode().values[0], 3)
     
     def get_median(self, attr_name):
-        return self.data[attr_name].median()
+        return round(self.data[attr_name].median(), 3)
     
     def get_variance(self, attr_name):
-        return self.data[attr_name].var()
+        return round(self.data[attr_name].var(), 3)
     
     def get_num_null(self, attr_name):
         return int(self.data[attr_name].isnull().sum())

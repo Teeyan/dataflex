@@ -1,9 +1,11 @@
 from flask import Flask, render_template, jsonify, request, json, session, send_file
+from flask_cors import CORS
 from datamanagement import DataManagement
 from pathlib import Path
 import pandas as pd
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/init', methods=['GET'])
@@ -39,7 +41,7 @@ def view_values():
 	return dm.view_values(attr_list)
 
 
-@app.route('/normalize')
+@app.route('/normalize', methods=['GET'])
 def normalize():
 	"""
 	Normalize the column attribute specified
@@ -51,7 +53,7 @@ def normalize():
 	return ('', 204)
 
 
-@app.route('/fill')
+@app.route('/fill', methods=['GET'])
 def fill_null():
 	"""
 	Fill in null values based on method and default if applicable
@@ -79,7 +81,7 @@ def correlate():
 	return dm.correlation_matrix(attr_list, method)
 
 
-@app.route('/drop')
+@app.route('/drop', methods=['GET'])
 def drop():
 	"""
 	Drop the specified attribute from the dataframe
