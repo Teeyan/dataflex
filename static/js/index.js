@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import {
-    PopupboxManager,
-    PopupboxContainer
-} from 'react-popupbox';
 import ReactDOM from 'react-dom';
+import Popup from "reactjs-popup";
+
+const customStyles = {
+  content: {
+      top :'50%',
+      left :'50%',
+  }  
+};
 
 /**
 * Top Level Component
@@ -130,14 +134,21 @@ constructor(props) {
     mode: 0,
     median: 0,
     variance: 0,
-    num_null: 0
+    num_null: 0,
+    openview: false,
+    data: {}
   }
 
-  this.handleNormalize = this.handleNormalize.bind(this)
-  this.handleNull = this.handleNull.bind(this)
-  this.viewData = this.viewData.bind(this)
+  this.handleNormalize = this.handleNormalize.bind(this);
+  this.handleNull = this.handleNull.bind(this);
+  this.viewData = this.viewData.bind(this);
+  this.closeView = this.closeView.bind(this);
 }
 
+closeView() {
+    this.setState({openView: false});
+}
+    
 componentDidMount() {
   fetch('http://localhost:8000/meta?attr=' + this.props.value,
         {
@@ -249,14 +260,8 @@ viewData (event){
   .then(results => {
     return results.json()
   }).then(data => {
-    const values = data[this.props.value]
-    const content = (
-      <div>
-        "HELLO!"
-        {values}
-      </div>
-    )
-    PopupboxManager.open({content})
+    this.setState({data: data[this.props.value]});
+    this.setState({openView: true});
   });
 }
 
@@ -283,11 +288,22 @@ render() {
                 </tr>
             </tbody>
         </table>
-      <div id="optional_features">
+      
         <button type="submit" className="btn btn-primary" id="view" onClick={this.viewData}>View</button>
+        <Popup
+                modal
+                open={this.state.openView}
+                closeOnDocumentClick
+                onClose={this.closeView}
+            >
+                 
+                <div className="header">{this.props.value}</div>
+                <div className="content">
+                    {this.state.data}
+                </div>
+            </Popup>
         <button type="submit" className="btn btn-primary" id="normalize" onClick={this.handleNormalize}>Normalize</button>
         <button type="submit" className="btn btn-primary" id="fill" onClick={this.handleNull}>Fill</button>
-      </div>
     </div>
   );
 }
@@ -300,12 +316,27 @@ render() {
 class AttrList extends React.Component {
     constructor(props) {
       super(props);
-
+      this.state = {
+        openView: false,
+        openCorr: false,
+        corrData: {},
+        viewData: {}
+      };
+      this.closeView = this.closeView.bind(this);
+      this.closeCorr = this.closeCorr.bind(this);
       this.handleSave = this.handleSave.bind(this);
       this.handleCorrelate = this.handleCorrelate.bind(this);
       this.handleView = this.handleView.bind(this);
     }
 
+    closeView() {
+        this.setState({openView: false})
+    }
+    
+    closeCorr() {
+        this.setState({corrView: false})
+    }
+    
     // Handle Saving to a .csv file
     handleSave() {
       fetch("http://localhost:8000/save?filename=saved.csv",
@@ -315,6 +346,11 @@ class AttrList extends React.Component {
           headers: {
               'Access-Control-Allow-Origin': '*'
           }
+      }).then(res => {
+          return res.blob();
+      }).then(blob => {
+        var FileSaver = require('file-saver');
+        FileSaver.saveAs(blob, "saved.csv");
       });
     }
 
@@ -322,10 +358,12 @@ class AttrList extends React.Component {
     handleCorrelate() {
       var url = "http://localhost:8000/correlate?";
       const attrList = Array.from(this.props.entries);
+      console.log(this.props.entries);
+      console.log(attrList);
       for(var i = 0; i < attrList.length - 1; i++) {
         url = url + "attr=" + attrList[i] + "&";
       }
-      url = url + "attr=" + attrList[attrList.length - 1];
+      url = url + "attr=" + attrList[attrList.length - 1] + "&method=pearson";
 
       fetch(url,
             {
@@ -337,17 +375,16 @@ class AttrList extends React.Component {
       }).then(results => {
         return results.json();
       }).then(data =>{
-        const content = (
-          <div>
-            {data}
-          </div>
-        );
-        PopupboxManager.open({content});
+        this.setState({corrData: JSON.stringify(data)});
+        this.setState({openCorr: true});
       });
     }
 
     // Handle viewing all the attributes
     handleView() {
+      if(this.props.entries.length == 0) {
+          return
+      } 
       var url = "http://localhost:8000/view?"
       const attrList = Array.from(this.props.entries);
       for(var i = 0; i < attrList.length - 1; i++) {
@@ -365,12 +402,10 @@ class AttrList extends React.Component {
       }).then(results => {
         return results.json();
       }).then(data => {
-        const content = (
-          <div>
-            {data}
-          </div>
-        );
-        PopupboxManager.open({content});
+        this.setState({viewData: JSON.stringify(data)})
+        this.setState({openView: true})
+        console.log(this.state.viewData)
+        console.log(data)
       });
     }
 
@@ -381,6 +416,8 @@ class AttrList extends React.Component {
         <Entry key={attr} value={attr} />
       );
 
+      const views = this.state.viewData;
+        
       return (
         <div id="attr_table">
           <ul>
@@ -389,9 +426,33 @@ class AttrList extends React.Component {
           
           <div id="summary_buttons">
             <button id="view_all_btn" className="btn btn-primary" onClick={this.handleView}> View All </button>
+            <Popup
+                modal
+                open={this.state.openView}
+                closeOnDocumentClick
+                onClose={this.closeView}
+            >
+                 
+                <div className="header"> Attribute Data </div>
+                <div className="content">
+                    {this.state.viewData}
+                </div>
+            </Popup>
             <button id="correlate_btn" className="btn btn-primary" onClick={this.handleCorrelate}> Correlate </button>
+            <Popup
+                modal
+                open={this.state.openCorr}
+                closeOnDocumentClick
+                onClose={this.closeCorr}
+            >
+                <div className="header">Correlation Coefficients</div>
+                <div className="content">
+                    {this.state.corrData}
+                </div>
+            </Popup>
             <button id="save_btn" className="btn btn-primary" onClick={this.handleSave}> Save </button>
           </div>
+          
         </div>
       );
     }
