@@ -7,78 +7,14 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     
-    <body>
-     <div id="uploadData" top= 100%>
-         <center>
-             <form>
-                 <input name="fileUpload" type= "file"> 
-             </form>
-         
-            <button type="submit" class="btn btn-primary" id="upload">Upload!</button>
-         </center>
-    </div>     
-    <div id="data">                
-            <div class="split left">
-              <div class="search">
-                  <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-
-                <div id="search_container"></div>
-              </div>
-            </div>
-        
-            k<div class="split right">
-              <div class="centered">
-                  <div id = "attributes_container">
-                    <!---REact Code---->  
-                      
-                  <div class="newBTN">
-                  <button type="submit" class="btn btn-primary" id="newupload">New Search</button>
-                </div>
-              </div>
-            </div>
-
-
-        </div>
-        </div>
                 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-    <script>
-        $(document).ready(function(){
-            $("#uploadData").show();
-            $("#data").hide(); 
-        })
-        $("#upload").on("click",function(){
-            $("#uploadData").hide();
-            $("#data").show();
-        })
-        $("#newupload").on("click",function(){
-            $("#uploadData").show();
-            $("#data").hide();
-        })
-        var input, filter, ul, li, a, i;
-          input = document.getElementById("mySearch");
-          filter = input.value.toUpperCase();
-          ul = document.getElementById("myMenu");
-          li = ul.getElementsByTagName("li");
-        function myFunction() {
-          var input, filter, ul, li, a, i;
-          input = document.getElementById("mySearch");
-          filter = input.value.toUpperCase();
-          ul = document.getElementById("myMenu");
-          li = ul.getElementsByTagName("li");
-          for (i = 0; i < li.length; i++) {
-            a = li[i].getElementsByTagName("a")[0];
-            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-              li[i].style.display = "";
-            } else {
-              li[i].style.display = "none";
-            }
-          }
-        }
-        </script>
-
+  <body>
+    <div id="root">
+    </div>
+  </body>
 
         <!-- React Components -->
         <script>
@@ -89,6 +25,77 @@
           } from 'react-popupbox';
           import ReactDOM from 'react-dom';
           import './App.css';
+
+          /**
+          * Top Level Component
+          */
+          class TopLevel extends React.Component {
+            constructor(props) {
+              super(props);
+              this.handleUpload = this.handleUpload.bind(this);
+              this.handleFileChange = this.handleFileChange.bind(this);
+              this.handleHeaderChange = this.handleHeaderChange.bind(this);
+              this.state = {uploaded: false, filename: "", header: ""};
+            }
+
+            handleFileChange() = (event) => {
+              this.setState({filename: event.target.value});
+            }
+
+            handleHeaderChange = (event) => {
+              this.setState({header: event.target.value});
+            }
+
+            handleUpload() {
+              this.setState({uploaded: true});
+            }
+
+            render() {
+              const isUploaded = this.state.uploaded;
+              if(uploaded) {
+                return(
+                  <div id="data">                
+                        <div class="split left">
+                          <div class="search">
+                              <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+                            <div id="search_container">
+                              <SearchList upload=this.state.filename, header=this.state.header/>
+                            </div>
+                          </div>
+                        </div>
+                    
+                        k<div class="split right">
+                          <div class="centered">
+                              <div id = "attributes_container">
+                                <AttrList /> 
+                                  
+                                <div class="newBTN">
+                                  <button type="submit" class="btn btn-primary" id="newupload">New Search</button>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                  </div>
+                );
+              } 
+              else {
+                return(
+                  <div id="uploadData" top= 100%>
+                           <center>
+                               <form>
+                                   <input name="fileUpload" type= "file" onChange={this.handleFileChange}> 
+                                   <input name="headerUpload" type="file" onChange={this.handleHeaderChange}>
+                               </form>
+                              <button type="submit" class="btn btn-primary" id="upload" onClick={this.handleUpload}>
+                                Upload!
+                              </button>
+                           </center>
+                  </div>   
+                );
+              }
+            }
+          }
 
           /**
           * Attribute Entry Component:
@@ -202,18 +209,18 @@
                             <th>Null Number</th>
                         </tr>
                         <tr>
-                            <td>{this.State.mean}</td>
-                            <td>{this.State.mode}</td>
-                            <td>{this.State.median00}</td>
-                            <td>{this.State.Variance}</td>
-                            <td>{this.State.num_null}</td>
+                            <td>{this.state.mean}</td>
+                            <td>{this.state.mode}</td>
+                            <td>{this.state.median00}</td>
+                            <td>{this.state.Variance}</td>
+                            <td>{this.state.num_null}</td>
                         </tr>
                     </table>
                 </div>
                 <div id="optional_features">
-                  <button type="submit" class="btn btn-primary" id="view">View</button>
-                  <button type="submit" class="btn btn-primary" id="view">Normalize</button>
-                  <button type="submit" class="btn btn-primary" id="view">Fill</button>
+                  <button type="submit" class="btn btn-primary" id="view" onClick={this.viewData}>View</button>
+                  <button type="submit" class="btn btn-primary" id="normalize" onClick={this.handleNormalize}>Normalize</button>
+                  <button type="submit" class="btn btn-primary" id="fill" onClick={this.handleNull}>Fill</button>
                 </div>
               );
             }
@@ -317,9 +324,9 @@
                   </ul>
                 </div>
                 <div id="summary_buttons">
-                  <button id="view_all_btn">View All</button>
-                  <button id="correlate_btn">Correlate</button>
-                  <button id="save_btn">Save</button>
+                  <button id="view_all_btn" class="btn btn-primary" onClick={this.handleView}>View All</button>
+                  <button id="correlate_btn" class="btn btn-primary" onClick={this.handleCorrelate}>Correlate</button>
+                  <button id="save_btn" class="btn btn-primary" onClick={this.handleSave}>Save</button>
                 </div>
               )
             }
@@ -399,19 +406,15 @@
 
             render() {
                 return (<div>
-                    <input type="checkbox" onchange="checkItem()">Add<br>
+                    <input type="checkbox" onChange={this.checkItem()}>Add<br>
                         {this.props.value}
-                        <button class="btn" onclick="removeItem()"><i class="fa fa-trash"></i></button>
+                        <button class="btn" onClick={this.removeItem()}><i class="fa fa-trash"></i></button>
                 </div>
             }
           }
 
           // Add Code to the containers
-          const searchContainer = document.querySelector('#search_container');
-          ReactDOM.render(e(SearchList), searchContainer);
-
-          const attrContainer = document.querySelector('#attributes_container');
-          ReactDOM.render(e(AttrList), attrContainer);
+          ReactDOM.render(<TopLevel />, "root");
         </script>
         
     </body>
