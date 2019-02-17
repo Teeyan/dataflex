@@ -96,6 +96,7 @@ class DataManagement:
         Drop the specified attribute from the list
         """
         self.data.drop(attr_name, axis=1, inplace=True)
+        print(self.data)
     
     """
     Helper Methods for getting meta info

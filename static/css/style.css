@@ -1,7 +1,11 @@
 
 .modal {
   font-size: 12px;
+  border-color: blue;
+  border: solid;
+  background-color: lightblue;
 }
+
 .modal > .header {
   width: 100%;
   border-bottom: 1px solid gray;
@@ -34,6 +38,19 @@
   background: #ffffff;
   border-radius: 18px;
   border: 1px solid #cfcece;
+}
+
+.header {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.content {
+  width: 100%;
+  padding: 10px 5px;
+  overflow: scroll;
+  height: 400px;
+  word-wrap: break-word;
 }
 
 html{

@@ -3,6 +3,7 @@ from flask_cors import CORS
 from datamanagement import DataManagement
 from pathlib import Path
 import pandas as pd
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -49,6 +50,7 @@ def normalize():
 	attr = request.args["attr"]
 	dm = DataManagement.from_pkl(pd.read_pickle("./dm.pkl"))
 	dm.normalize(attr)
+	os.remove("./dm.pkl")
 	dm.data.to_pickle("./dm.pkl")
 	return ('', 204)
 
@@ -65,6 +67,7 @@ def fill_null():
 	if method == "default":
 		request.args.get("default")
 	dm.fill_in_missing(attr, method, default)
+	os.remove("./dm.pkl")
 	dm.data.to_pickle("./dm.pkl")
 	return ('', 204)
 
@@ -89,6 +92,8 @@ def drop():
 	dm = DataManagement.from_pkl(pd.read_pickle("./dm.pkl"))
 	attr = request.args["attr"]
 	dm.drop_attr(attr)
+	os.remove("./dm.pkl")
+	print(dm.data)
 	dm.data.to_pickle("./dm.pkl")
 	return ('', 204)
 
@@ -100,7 +105,7 @@ def save():
 	"""
 	dm = DataManagement.from_pkl(pd.read_pickle("./dm.pkl"))
 	filename = request.args["filename"]
-	dm.save_csv(filename)
+	dm.data.to_csv(filename)
 	return send_file(filename)
 
 

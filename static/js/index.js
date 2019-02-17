@@ -42,6 +42,15 @@ removeEntry(attr) {
 }
     
 removeAttr(attr) {
+  // Get rid of it first
+  fetch("http://localhost:8000/drop?attr="+attr,
+               {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+              'Access-Control-Allow-Origin': '*'
+          }
+      });
   this.setState(({attrList}) => {
     const newList = new Set(attrList);
     newList.delete(attr);
@@ -340,8 +349,8 @@ class AttrList extends React.Component {
     
     // Handle Saving to a .csv file
     handleSave() {
-      fetch("http://localhost:8000/save?filename=saved.csv",
-            {
+      fetch("http://localhost:8000/save?filename=save_file.csv",
+          {
           method: 'GET',
           mode: 'cors',
           headers: {
@@ -351,7 +360,7 @@ class AttrList extends React.Component {
           return res.blob();
       }).then(blob => {
         var FileSaver = require('file-saver');
-        FileSaver.saveAs(blob, "saved.csv");
+        FileSaver.saveAs(blob, "save_file.csv");
       });
     }
 
