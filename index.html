@@ -22,26 +22,13 @@
               <div class="search">
                   <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
 
-                 <div id="attributes">
-                    <ul id="myMenu">
-                          <li><a href="#">HTML</a></li>
-                          <li><a href="#">CSS</a></li>
-                          <li><a href="#">JavaScript</a></li>
-                          <li><a href="#">PHP</a></li>
-                          <li><a href="#">Python</a></li>
-                          <li><a href="#">jQuery</a></li>
-                          <li><a href="#">SQL</a></li>
-                          <li><a href="#">Bootstrap</a></li>
-                          <li><a href="#">Node.js</a></li>
-                        <!---- temp dont use REact Code Here-->
-                        </ul>
-                  </div>
+                <div id="search_container"></div>
               </div>
             </div>
         
             k<div class="split right">
               <div class="centered">
-                  <div id = "featureData">
+                  <div id = "attributes_container">
                     <!---REact Code---->  
                       
                   <div class="newBTN">
@@ -100,6 +87,7 @@
             PopupboxManager,
             PopupboxContainer
           } from 'react-popupbox';
+          import ReactDOM from 'react-dom';
           import './App.css';
 
           /**
@@ -221,6 +209,57 @@
 
               this.additem = this.addItem.bind(this);
               this.removeItem = this.removeItem.bind(this);
+              this.handleSave = this.handleSave.bind(this);
+              this.handleCorrelate = this.handleCorrelate.bind(this);
+              this.handleView = this.handleView.bind(this);
+            }
+
+            // Handle Saving to a .csv file
+            handleSave() {
+              fetch("localhost:8000/save?filename=saved.csv");
+            }
+
+            // Handle displaying a correlation matrix of the attributes
+            handleCorrelate() {
+              var url = "localhost:8000/correlate?"
+              const attrList = Array.from(this.state.entries);
+              for(var i = 0; i < attrList.length - 1; i++) {
+                url = url + "attr=" + attrList[i] + "&";
+              }
+              url = url + "attr=" + attrList[attrList.length - 1];
+
+              fetch(url).then(results => {
+                return results.json();
+              }).then(data =>{
+                const content = {
+                  <div>
+                    {data}
+                  </div>
+                }
+                PopupboxManager.open({content});
+              });
+            }
+
+            // Handle viewing all the attributes
+            handleView() {
+              var url = "localhost:8000/view?"
+              const attrList = Array.from(this.state.entries);
+              for(var i = 0; i < attrList.length - 1; i++) {
+                url = url + "attr=" + attrList[i] + "&";
+              }
+              url = url + "attr=" + attrList[attrList.length - 1];
+
+              fetch(url).then(results => {
+                return results.json();
+              }).then(data => {
+                const content = {
+                  <div>
+                    {data}
+                  </div>
+                }
+                PopupboxManager.open({content})
+              });
+              
             }
 
             // Add an Entry to the list
@@ -249,9 +288,16 @@
               );
               
               return (
-                <ul>
-                  {attrList}
-                </ul>
+                <div id="attr_table">
+                  <ul>
+                    {attrList}
+                  </ul>
+                </div>
+                <div id="summary_buttons">
+                  <button id="view_all_btn">View All</button>
+                  <button id="correlate_btn">Correlate</button>
+                  <button id="save_btn">Save</button>
+                </div>
               )
             }
           }
@@ -332,6 +378,13 @@
 
             }
           }
+
+          // Add Code to the containers
+          const searchContainer = document.querySelector('#search_container');
+          ReactDOM.render(e(SearchList), searchContainer);
+
+          const attrContainer = document.querySelector('#attributes_container');
+          ReactDOM.render(e(AttrList), attrContainer);
         </script>
         
     </body>
